@@ -171,7 +171,7 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 <div className="flex items-center justify-between">
                   <span className="font-semibold text-stone-200">Pilihan Nada Adzan</span>
                   <button
-                    onClick={() => handleTestSound(settings.prayerAlerts.maghrib?.soundType || 'adzan_melodic')}
+                    onClick={() => handleTestSound(settings.prayerAlerts.maghrib?.soundType || 'adzan_default')}
                     className="flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-lg bg-emerald-950 border border-emerald-600/50 text-emerald-300 active:scale-95 transition"
                   >
                     {isPlayingAudio ? (
@@ -190,7 +190,8 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
                 <div className="grid grid-cols-2 gap-1.5">
                   {[
-                    { id: 'adzan_melodic', label: 'Adzan Melodik' },
+                    { id: 'adzan_default', label: 'Adzan Merdu (Default)' },
+                    { id: 'adzan_melodic', label: 'Adzan Melodik (Sintetis)' },
                     { id: 'bedug_takbir', label: 'Bedug Nusantara' },
                     { id: 'adzan_short', label: 'Adzan Pendek (4s)' },
                     { id: 'soft_chime', label: 'Notifikasi Halus' },
@@ -208,11 +209,16 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                         }}
                         className={`py-1.5 px-2 rounded-xl text-left border text-[11px] font-semibold transition ${
                           isSelected
-                            ? 'bg-emerald-950/80 border-emerald-500 text-white'
+                            ? 'bg-emerald-950/80 border-emerald-500 text-white shadow-sm ring-1 ring-emerald-500/40'
                             : 'bg-stone-900 border-stone-800 text-stone-400 hover:text-stone-200'
-                        }`}
+                        } ${s.id === 'adzan_default' ? 'col-span-2 flex items-center justify-between' : ''}`}
                       >
-                        {s.label}
+                        <span>{s.label}</span>
+                        {s.id === 'adzan_default' && isSelected && (
+                          <span className="text-[9px] px-1.5 py-0.2 rounded-full bg-emerald-500/30 text-emerald-300 font-bold">
+                            Aktif
+                          </span>
+                        )}
                       </button>
                     );
                   })}

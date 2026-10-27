@@ -1,17 +1,25 @@
 /**
- * Ultra-Lightweight Web Audio API Sound Engine
- * Provides authentic Islamic Adzan melodies, traditional Bedug drums, and chime alerts
- * Zero external audio files required -> 0 MB footprint, instant play, works offline!
+ * Audio Engine for "Demi Waktu"
+ * Supports realistic recorded MP3/MPEG Adzan audio file as default,
+ * with zero-dependency Web Audio API procedural synthesis fallback.
  */
 
-export type AdzanSoundType = 'adzan_melodic' | 'bedug_takbir' | 'adzan_short' | 'soft_chime';
+export const DEFAULT_ADZAN_AUDIO_PATH = '/assets/aistudio/WhatsApp_Audio_2026-10-27_at_16.01.07_7b041e01.mpeg';
+
+export type AdzanSoundType =
+  | 'adzan_default'
+  | 'adzan_melodic'
+  | 'bedug_takbir'
+  | 'adzan_short'
+  | 'soft_chime';
 
 class AudioEngine {
   private ctx: AudioContext | null = null;
   private isPlaying: boolean = false;
   private activeNodes: { stop?: () => void; disconnect?: () => void }[] = [];
-  private currentVolume: number = 0.8;
+  private currentVolume: number = 0.85;
   private unlocked: boolean = false;
+  private currentAudioEl: HTMLAudioElement | null = null;
 
   private getContext(): AudioContext {
     if (!this.ctx) {
@@ -44,6 +52,11 @@ class AudioEngine {
 
   public setVolume(vol: number) {
     this.currentVolume = Math.max(0, Math.min(1, vol));
+    if (this.currentAudioEl) {
+      try {
+        this.currentAudioEl.volume = this.currentVolume;
+      } catch {}
+    }
   }
 
   public getVolume(): number {
@@ -56,6 +69,13 @@ class AudioEngine {
 
   public stopAll() {
     this.isPlaying = false;
+    if (this.currentAudioEl) {
+      try {
+        this.currentAudioEl.pause();
+        this.currentAudioEl.currentTime = 0;
+        this.currentAudioEl = null;
+      } catch {}
+    }
     for (const node of this.activeNodes) {
       try {
         if (node.stop) node.stop();
@@ -79,9 +99,9 @@ class AudioEngine {
   }
 
   /**
-   * Play selected adzan/alert sound
+   * Play selected adzan/alert sound (defaults to recorded adzan_default)
    */
-  public async playSound(type: AdzanSoundType = 'adzan_melodic', onEnded?: () => void) {
+  public async playSound(type: AdzanSoundType = 'adzan_default', onEnded?: () => void) {
     this.stopAll();
     this.unlockAudio();
     this.isPlaying = true;
@@ -93,6 +113,9 @@ class AudioEngine {
     masterGain.connect(ctx.destination);
 
     switch (type) {
+      case 'adzan_default':
+        this.playAdzanAudioFile(DEFAULT_ADZAN_AUDIO_PATH, masterGain, onEnded);
+        break;
       case 'bedug_takbir':
         this.playBedugTakbir(ctx, masterGain, onEnded);
         break;
@@ -106,6 +129,53 @@ class AudioEngine {
       default:
         this.playAdzanMelodic(ctx, masterGain, onEnded);
         break;
+    }
+  }
+
+  /**
+   * Plays the default recorded Adzan audio file
+   * Features graceful fallback to melodic procedural synthesis if offline or blocked
+   */
+  private playAdzanAudioFile(url: string, destination: GainNode, onEnded?: () => void) {
+    try {
+      const audio = new Audio(url);
+      this.currentAudioEl = audio;
+      audio.volume = this.currentVolume;
+      audio.preload = 'auto';
+
+      let isFinished = false;
+      const finishPlayback = () => {
+        if (isFinished) return;
+        isFinished = true;
+        if (this.currentAudioEl === audio) {
+          this.currentAudioEl = null;
+        }
+        this.isPlaying = false;
+        if (onEnded) onEnded();
+      };
+
+      audio.onended = finishPlayback;
+      audio.onerror = (e) => {
+        console.warn('Audio element error, falling back to melodic synth:', e);
+        if (this.isPlaying && this.currentAudioEl === audio) {
+          this.currentAudioEl = null;
+          this.playAdzanMelodic(this.getContext(), destination, onEnded);
+        }
+      };
+
+      const playPromise = audio.play();
+      if (playPromise !== undefined) {
+        playPromise.catch((err) => {
+          console.warn('Audio play was prevented by browser policy, falling back to WebAudio synth:', err);
+          if (this.isPlaying && this.currentAudioEl === audio) {
+            this.currentAudioEl = null;
+            this.playAdzanMelodic(this.getContext(), destination, onEnded);
+          }
+        });
+      }
+    } catch (err) {
+      console.warn('Failed to initialize Audio element, falling back to WebAudio:', err);
+      this.playAdzanMelodic(this.getContext(), destination, onEnded);
     }
   }
 

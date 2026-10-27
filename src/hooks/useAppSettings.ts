@@ -25,7 +25,7 @@ export interface AppSettings {
   showSunrise: boolean;
 }
 
-const SETTINGS_KEY = 'jadwal_sholat_settings_v1';
+const SETTINGS_KEY = 'jadwal_sholat_settings_v2';
 
 const DEFAULT_SETTINGS: AppSettings = {
   theme: 'amoled',
@@ -37,12 +37,12 @@ const DEFAULT_SETTINGS: AppSettings = {
   customCoords: null,
   prayerAlerts: {
     imsak: { enabled: true, soundType: 'soft_chime' },
-    fajr: { enabled: true, soundType: 'adzan_melodic' },
+    fajr: { enabled: true, soundType: 'adzan_default' },
     sunrise: { enabled: false, soundType: 'soft_chime' },
-    dhuhr: { enabled: true, soundType: 'adzan_melodic' },
-    asr: { enabled: true, soundType: 'adzan_melodic' },
-    maghrib: { enabled: true, soundType: 'adzan_melodic' },
-    isha: { enabled: true, soundType: 'adzan_melodic' },
+    dhuhr: { enabled: true, soundType: 'adzan_default' },
+    asr: { enabled: true, soundType: 'adzan_default' },
+    maghrib: { enabled: true, soundType: 'adzan_default' },
+    isha: { enabled: true, soundType: 'adzan_default' },
   },
   fajrTatswib: true,
   vibrationEnabled: true,
@@ -53,9 +53,21 @@ const DEFAULT_SETTINGS: AppSettings = {
 export function useAppSettings() {
   const [settings, setSettings] = useState<AppSettings>(() => {
     try {
-      const stored = localStorage.getItem(SETTINGS_KEY);
+      let stored = localStorage.getItem(SETTINGS_KEY);
+      if (!stored) {
+        stored = localStorage.getItem('jadwal_sholat_settings_v1');
+      }
       if (stored) {
-        return { ...DEFAULT_SETTINGS, ...JSON.parse(stored) };
+        const parsed = JSON.parse(stored);
+        // Automatically migrate any prayer alert still set to adzan_melodic to new default adzan_default
+        if (parsed.prayerAlerts) {
+          (Object.keys(parsed.prayerAlerts) as PrayerName[]).forEach((p) => {
+            if (parsed.prayerAlerts[p]?.soundType === 'adzan_melodic') {
+              parsed.prayerAlerts[p].soundType = 'adzan_default';
+            }
+          });
+        }
+        return { ...DEFAULT_SETTINGS, ...parsed };
       }
     } catch (e) {
       // ignore

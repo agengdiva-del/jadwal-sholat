@@ -56,10 +56,10 @@ export const PrayerList: React.FC<PrayerListProps> = ({
   };
 
   const handleCycleAlert = (name: PrayerName) => {
-    const current = settings.prayerAlerts[name] || { enabled: true, soundType: 'adzan_melodic' };
+    const current = settings.prayerAlerts[name] || { enabled: true, soundType: 'adzan_default' };
     if (!current.enabled) {
-      onUpdateAlert(name, { enabled: true, soundType: 'adzan_melodic' });
-    } else if (current.soundType === 'adzan_melodic') {
+      onUpdateAlert(name, { enabled: true, soundType: 'adzan_default' });
+    } else if (current.soundType === 'adzan_default' || current.soundType === 'adzan_melodic') {
       onUpdateAlert(name, { enabled: true, soundType: 'soft_chime' });
     } else {
       onUpdateAlert(name, { enabled: false });
@@ -74,7 +74,7 @@ export const PrayerList: React.FC<PrayerListProps> = ({
           <span>Jadwal Waktu Sholat Lengkap</span>
         </h2>
         <button
-          onClick={() => onPreviewSound('adzan_melodic')}
+          onClick={() => onPreviewSound('adzan_default')}
           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-emerald-950/80 border border-emerald-800/60 hover:border-emerald-500 text-emerald-300 text-[10px] font-semibold active:scale-95 transition"
         >
           <Play className="w-2.5 h-2.5 fill-current" />
@@ -86,7 +86,12 @@ export const PrayerList: React.FC<PrayerListProps> = ({
         {prayerKeys.map((name) => {
           const isNext = nextPrayer.name === name;
           const time = getTimeForPrayer(name);
-          const alertConfig = settings.prayerAlerts[name] || { enabled: true, soundType: 'adzan_melodic' };
+          const alertConfig = settings.prayerAlerts[name] || { enabled: true, soundType: 'adzan_default' };
+          const isAdzanSound =
+            alertConfig.soundType === 'adzan_default' ||
+            alertConfig.soundType === 'adzan_melodic' ||
+            alertConfig.soundType === 'adzan_short' ||
+            alertConfig.soundType === 'bedug_takbir';
 
           return (
             <div
@@ -143,21 +148,21 @@ export const PrayerList: React.FC<PrayerListProps> = ({
                   className={`w-6 h-6 rounded-lg flex items-center justify-center transition active:scale-95 ${
                     !alertConfig.enabled || settings.muteAll
                       ? 'bg-stone-800/50 text-stone-500 hover:text-stone-300'
-                      : alertConfig.soundType === 'adzan_melodic'
+                      : isAdzanSound
                       ? 'bg-emerald-500/25 text-emerald-300 border border-emerald-400/50'
                       : 'bg-teal-500/25 text-teal-300 border border-teal-400/50'
                   }`}
                   title={
                     !alertConfig.enabled || settings.muteAll
                       ? 'Bisu'
-                      : alertConfig.soundType === 'adzan_melodic'
+                      : isAdzanSound
                       ? 'Adzan'
                       : 'Notifikasi'
                   }
                 >
                   {!alertConfig.enabled || settings.muteAll ? (
                     <BellOff className="w-3 h-3" />
-                  ) : alertConfig.soundType === 'adzan_melodic' ? (
+                  ) : isAdzanSound ? (
                     <Volume2 className="w-3 h-3" />
                   ) : (
                     <Bell className="w-3 h-3" />
