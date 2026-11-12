@@ -5,9 +5,11 @@
  */
 
 export const DEFAULT_ADZAN_AUDIO_PATH = '/assets/aistudio/WhatsApp_Audio_2026-10-27_at_16.01.07_7b041e01.mpeg';
+export const CUSTOM_ADZAN_STORAGE_KEY = 'demi_waktu_custom_adzan_audio';
 
 export type AdzanSoundType =
   | 'adzan_default'
+  | 'adzan_custom'
   | 'adzan_melodic'
   | 'bedug_takbir'
   | 'adzan_short'
@@ -20,6 +22,56 @@ class AudioEngine {
   private currentVolume: number = 0.85;
   private unlocked: boolean = false;
   private currentAudioEl: HTMLAudioElement | null = null;
+  private customAudioDataUrl: string | null = null;
+
+  constructor() {
+    this.loadCustomAudioFromStorage();
+  }
+
+  public loadCustomAudioFromStorage() {
+    try {
+      if (typeof window !== 'undefined') {
+        const stored = localStorage.getItem(CUSTOM_ADZAN_STORAGE_KEY);
+        if (stored) {
+          this.customAudioDataUrl = stored;
+        }
+      }
+    } catch (e) {
+      console.warn('Error reading custom adzan audio from storage:', e);
+    }
+  }
+
+  public setCustomAudio(dataUrl: string, name?: string) {
+    this.customAudioDataUrl = dataUrl;
+    try {
+      localStorage.setItem(CUSTOM_ADZAN_STORAGE_KEY, dataUrl);
+      if (name) {
+        localStorage.setItem(CUSTOM_ADZAN_STORAGE_KEY + '_name', name);
+      }
+    } catch (e) {
+      console.warn('Failed saving custom audio to localStorage (file might be too large):', e);
+    }
+  }
+
+  public getCustomAudioName(): string | null {
+    try {
+      return localStorage.getItem(CUSTOM_ADZAN_STORAGE_KEY + '_name') || 'Audio Adzan Kustom';
+    } catch {
+      return null;
+    }
+  }
+
+  public hasCustomAudio(): boolean {
+    return !!this.customAudioDataUrl;
+  }
+
+  public removeCustomAudio() {
+    this.customAudioDataUrl = null;
+    try {
+      localStorage.removeItem(CUSTOM_ADZAN_STORAGE_KEY);
+      localStorage.removeItem(CUSTOM_ADZAN_STORAGE_KEY + '_name');
+    } catch {}
+  }
 
   private getContext(): AudioContext {
     if (!this.ctx) {
@@ -113,6 +165,13 @@ class AudioEngine {
     masterGain.connect(ctx.destination);
 
     switch (type) {
+      case 'adzan_custom':
+        if (this.customAudioDataUrl) {
+          this.playAdzanAudioFile(this.customAudioDataUrl, masterGain, onEnded);
+        } else {
+          this.playAdzanAudioFile(DEFAULT_ADZAN_AUDIO_PATH, masterGain, onEnded);
+        }
+        break;
       case 'adzan_default':
         this.playAdzanAudioFile(DEFAULT_ADZAN_AUDIO_PATH, masterGain, onEnded);
         break;

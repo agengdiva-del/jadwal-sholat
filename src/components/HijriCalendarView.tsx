@@ -149,7 +149,7 @@ export const HijriCalendarView: React.FC<HijriCalendarViewProps> = ({ currentDat
                       month: 'long',
                       year: 'numeric',
                     }),
-                    event: dayEvent ? { ...dayEvent, daysLeft: 0, isToday } : undefined,
+                    event: dayEvent ? { ...dayEvent, daysLeft: 0, isToday, isTomorrow: false } : undefined,
                     isAyyamulBidh,
                   })
                 }

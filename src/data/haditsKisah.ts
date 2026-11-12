@@ -102,10 +102,101 @@ export const DAILY_HADITS_COLLECTION: HaditsKisahItem[] = [
     hikmah: 'Basahilah lisan kita dengan ucapan Astaghfirullah. Istighfar adalah magnet pembuka berkah dan peredam kesulitan hidup.',
     category: 'dzikir',
   },
+  {
+    id: 'hadits-11',
+    title: 'Menyebarkan Salam dan Memberi Makan',
+    arabic: 'أَفْشُوا السَّلَامَ، وَأَطْعِمُوا الطَّعَامَ، وَصِلُوا الْأَرْحَامَ، وَصَلُّوا بِاللَّيْلِ وَالنَّاسُ نِيَامٌ، تَدْخُلُوا الْجَنَّةَ بِسَلَامٍ',
+    matanIndo: 'Sebarkanlah salam, berikanlah makanan, sambunglah tali silaturahim, dan sholatlah di malam hari ketika manusia sedang tertidur, niscaya kalian masuk surga dengan selamat sejahtera.',
+    source: 'HR. At-Tirmidzi no. 2485 & Ibnu Majah (Shahih)',
+    hikmah: 'Empat amalan pembuka gerbang surga yang memadukan kebaikan sosial kepada sesama dan keintiman ibadah kepada Allah.',
+    category: 'akhlak',
+  },
+  {
+    id: 'hadits-12',
+    title: 'Keutamaan Sholat Berjamaah 27 Derajat',
+    arabic: 'صَلاَةُ الْجَمَاعَةِ تَفْضُلُ صَلاَةَ الْفَذِّ بِسَبْعٍ وَعِشْرِينَ دَرَجَةً',
+    matanIndo: 'Sholat berjamaah melampaui keutamaan sholat sendirian sebanyak dua puluh tujuh derajat.',
+    source: 'HR. Bukhari no. 645 & Muslim no. 650',
+    hikmah: 'Langkah kaki menuju masjid bukan hanya melipatgandakan pahala sholat, tetapi juga menggugurkan dosa dan mempererat persaudaraan umat.',
+    category: 'sholat',
+  },
+  {
+    id: 'hadits-13',
+    title: 'Dua Kalimat Ringan di Lisan Berat di Timbangan',
+    arabic: 'كَلِمَتَانِ خَفِيفَتَانِ عَلَى اللِّسَانِ، ثَقِيلَتَانِ فِي المِيزَانِ، حَبِيبَتَانِ إِلَى الرَّحْمَنِ: سُبْحَانَ اللَّهِ وَبِحَمْدِهِ، سُبْحَانَ اللَّهِ العَظِيمِ',
+    matanIndo: 'Dua kalimat yang ringan di lisan, berat di timbangan (mizan), dan sangat dicintai oleh Ar-Rahman: Subhanallahi wa bihamdihi, Subhanallahil \'Azhim.',
+    source: 'HR. Bukhari no. 6406 & Muslim no. 2694',
+    hikmah: 'Dzikir yang sangat mudah diucapkan kapan pun di sela kesibukan kita, namun timbangannya memberatkan amal kebajikan di akhirat.',
+    category: 'dzikir',
+  },
+  {
+    id: 'hadits-14',
+    title: 'Sebaik-Baik Manusia adalah yang Paling Bermanfaat',
+    arabic: 'خَيْرُ النَّاسِ أَنْفَعُهُمْ لِلنَّاسِ',
+    matanIndo: 'Sebaik-baik manusia adalah yang paling banyak memberikan manfaat bagi sesama manusia.',
+    source: 'HR. At-Thabrani dalam Al-Ausath (Shahih)',
+    hikmah: 'Kadar keimanan seseorang terpancar dari sejauh mana kehadiran dirinya menjadi solusi, meringankan beban, dan membawa kebahagiaan bagi sekitarnya.',
+    category: 'akhlak',
+  },
+  {
+    id: 'hadits-15',
+    title: 'Menjaga Lisan dan Tangan',
+    arabic: 'المُسْلِمُ مَنْ سَلِمَ المُسْلِمُونَ مِنْ لِسَانِهِ وَيَدِهِ',
+    matanIndo: 'Seorang muslim sejati adalah orang yang kaum muslimin lainnya merasa aman dan selamat dari keburukan lisan serta tangannya.',
+    source: 'HR. Bukhari no. 10 & Muslim no. 40',
+    hikmah: 'Ibadah ritual tidak akan sempurna jika tidak diimbangi dengan menjaga ucapan dari ghibah, fitnah, dan perbuatan yang menyakiti sesama.',
+    category: 'akhlak',
+  },
+  {
+    id: 'hadits-16',
+    title: 'Menuntut Ilmu Adalah Jalan Menuju Surga',
+    arabic: 'مَنْ سَلَكَ طَرِيقًا يَلْتَمِسُ فِيهِ عِلْمًا سَهَّلَ اللَّهُ لَهُ بِهِ طَرِيقًا إِلَى الْجَنَّةِ',
+    matanIndo: 'Barangsiapa menempuh suatu jalan dalam rangka menuntut ilmu (syar\'i), maka Allah akan memudahkan baginya jalan menuju surga.',
+    source: 'HR. Muslim no. 2699',
+    hikmah: 'Setiap detik yang kita luangkan untuk membaca, mengaji, dan memahami agama adalah langkah nyata yang mempermudah langkah menuju jannah.',
+    category: 'istiqomah',
+  },
+  {
+    id: 'hadits-17',
+    title: 'Sabar Menghadapi Ujian Menggugurkan Dosa',
+    arabic: 'مَا يُصِيبُ المُسْلِمَ مِنْ نَصَبٍ وَلاَ وَصَبٍ وَلاَ هَمٍّ وَلاَ حُزْنٍ وَلاَ أَذًى وَلاَ غَمٍّ، حَتَّى الشَّوْكَةِ يُشَاكُهَا، إِلَّا كَفَّرَ اللَّهُ بِهَا مِنْ خَطَايَاهُ',
+    matanIndo: 'Tidaklah menimpa seorang muslim berupa keletihan, penyakit, kegelisahan, kesedihan, gangguan, atau duka cita, bahkan duri yang menusuknya, melainkan Allah jadikan sebagai penggugur dosa-dosanya.',
+    source: 'HR. Bukhari no. 5641 & Muslim no. 2573',
+    hikmah: 'Bahkan rasa lelah sepulang bekerja mencari nafkah halal dengan niat ibadah dihitung Allah sebagai penghapus dosa-dosa kita.',
+    category: 'istiqomah',
+  },
+  {
+    id: 'hadits-18',
+    title: 'Keutamaan Membaca Al-Qur’an di Hari Kiamat',
+    arabic: 'اقْرَؤُوا القُرْآنَ فَإِنَّهُ يَأْتِي يَوْمَ القِيَامَةِ شَفِيعًا لِأَصْحَابِهِ',
+    matanIndo: 'Bacalah Al-Qur\'an, karena sesungguhnya ia akan datang pada hari kiamat kelak sebagai pemberi syafa\'at bagi para sahabat karibnya (yang rajin membacanya).',
+    source: 'HR. Muslim no. 804',
+    hikmah: 'Al-Qur\'an akan menjadi pembela setia di saat manusia kebingungan mencari pertolongan di padang mahsyar.',
+    category: 'quran',
+  },
+  {
+    id: 'hadits-19',
+    title: 'Doa Ketika Ditimpa Kesulitan',
+    arabic: 'اللَّهُمَّ لَا سَهْلَ إِلَّا مَا جَعَلْتَهُ سَهْلًا، وَأَنْتَ تَجْعَلُ الْحَزْنَ إِذَا شِئْتَ سَهْلًا',
+    matanIndo: 'Ya Allah, tidak ada kemudahan kecuali apa yang Engkau jadikan mudah, dan Engkau menjadikan kesulitan jika Engkau kehendaki menjadi mudah.',
+    source: 'HR. Ibnu Hibban no. 974 (Shahih)',
+    hikmah: 'Gantungkan seluruh urusan yang terasa berat kepada Allah, sebab tak ada gunung kesulitan yang tak dapat diratakan oleh kekuasaan-Nya.',
+    category: 'dzikir',
+  },
+  {
+    id: 'hadits-20',
+    title: 'Senyum Adalah Sedekah',
+    arabic: 'تَبَسُّمُكَ فِي وَجْهِ أَخِيكَ لَكَ صَدَقَةٌ',
+    matanIndo: 'Senyum manismu di hadapan wajah saudaramu terhitung sebagai sedekah bagimu.',
+    source: 'HR. At-Tirmidzi no. 1956 (Shahih)',
+    hikmah: 'Islam mengajarkan keindahan bermuamalah. Wajah yang ramah dan menyejukkan hati orang lain bernilai ibadah di sisi Allah Ta\'ala.',
+    category: 'akhlak',
+  },
 ];
 
 /**
  * Returns deterministic daily Hadits based on the current date
+ * Changes automatically every single day without repetition
  */
 export function getDailyHadits(date: Date = new Date()): HaditsKisahItem {
   // Use day of the year to pick a unique Hadits every single day
@@ -116,3 +207,4 @@ export function getDailyHadits(date: Date = new Date()): HaditsKisahItem {
   const index = Math.abs(dayOfYear) % DAILY_HADITS_COLLECTION.length;
   return DAILY_HADITS_COLLECTION[index];
 }
+

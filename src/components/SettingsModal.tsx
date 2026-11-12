@@ -190,6 +190,9 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
 
                 <div className="grid grid-cols-2 gap-1.5">
                   {[
+                    ...(audioEngine.hasCustomAudio()
+                      ? [{ id: 'adzan_custom', label: `🎧 Kustom: ${audioEngine.getCustomAudioName()?.slice(0, 20)}` }]
+                      : []),
                     { id: 'adzan_default', label: 'Adzan Merdu (Default)' },
                     { id: 'adzan_melodic', label: 'Adzan Melodik (Sintetis)' },
                     { id: 'bedug_takbir', label: 'Bedug Nusantara' },
@@ -225,6 +228,80 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
                 </div>
               </div>
 
+              {/* Custom Adzan File Upload */}
+              <div className="p-2.5 bg-emerald-950/30 border-t border-b border-emerald-900/40 space-y-1.5">
+                <div className="flex items-center justify-between">
+                  <div>
+                    <span className="font-semibold text-stone-200 block text-xs">
+                      Unggah File Adzan Sendiri
+                    </span>
+                    <span className="text-[10px] text-stone-400">
+                      Format MP3 / WAV / MPEG (rekaman adzan favorit Anda)
+                    </span>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <label className="flex-1 cursor-pointer">
+                    <div className="flex items-center justify-center gap-1.5 py-1.5 px-3 rounded-xl bg-gradient-to-r from-emerald-600 to-teal-700 hover:from-emerald-500 text-white font-bold text-[11px] shadow-sm transition active:scale-95 border border-emerald-400/30 text-center">
+                      <span>📁 Pilih File Audio Adzan</span>
+                    </div>
+                    <input
+                      type="file"
+                      accept="audio/*,.mp3,.wav,.ogg,.m4a,.mpeg"
+                      className="hidden"
+                      onChange={(e) => {
+                        const file = e.target.files?.[0];
+                        if (file) {
+                          const reader = new FileReader();
+                          reader.onload = (event) => {
+                            const result = event.target?.result as string;
+                            if (result) {
+                              audioEngine.setCustomAudio(result, file.name);
+                              // set all prayer alerts to adzan_custom
+                              const updated = { ...settings.prayerAlerts };
+                              (Object.keys(updated) as (keyof typeof updated)[]).forEach((p) => {
+                                updated[p].soundType = 'adzan_custom';
+                              });
+                              onUpdateSettings({ prayerAlerts: updated });
+                              audioEngine.triggerVibration([50, 50, 100]);
+                            }
+                          };
+                          reader.readAsDataURL(file);
+                        }
+                      }}
+                    />
+                  </label>
+
+                  {audioEngine.hasCustomAudio() && (
+                    <button
+                      onClick={() => {
+                        audioEngine.removeCustomAudio();
+                        // fallback to adzan_default
+                        const updated = { ...settings.prayerAlerts };
+                        (Object.keys(updated) as (keyof typeof updated)[]).forEach((p) => {
+                          if (updated[p].soundType === 'adzan_custom') {
+                            updated[p].soundType = 'adzan_default';
+                          }
+                        });
+                        onUpdateSettings({ prayerAlerts: updated });
+                      }}
+                      className="px-2.5 py-1.5 rounded-xl bg-red-950/80 border border-red-800/60 text-red-300 text-[10px] font-bold hover:bg-red-900 transition"
+                      title="Hapus file audio kustom"
+                    >
+                      Hapus
+                    </button>
+                  )}
+                </div>
+
+                {audioEngine.hasCustomAudio() && (
+                  <div className="flex items-center justify-between text-[10px] text-emerald-300 bg-emerald-950/60 px-2 py-1 rounded-lg border border-emerald-800/40">
+                    <span className="truncate">🎵 Terpasang: {audioEngine.getCustomAudioName()}</span>
+                    <span className="font-bold uppercase text-[9px] text-emerald-400 ml-1">Kustom Aktif</span>
+                  </div>
+                )}
+              </div>
+
               {/* Volume Slider */}
               <div className="p-2.5 flex items-center justify-between gap-3">
                 <span className="font-semibold text-stone-200 flex-shrink-0">
@@ -243,13 +320,55 @@ export const SettingsModal: React.FC<SettingsModalProps> = ({
             </div>
           </div>
 
-          {/* GROUP 3: NOTIFIKASI & FITUR LAINNYA */}
+          {/* GROUP 3: NOTIFIKASI & PERINGATAN AWAL */}
           <div className="space-y-1">
             <span className="text-[10px] font-bold uppercase tracking-wider text-emerald-400 px-1">
-              Notifikasi &amp; Getar
+              Notifikasi &amp; Peringatan Dini
             </span>
 
             <div className="rounded-2xl bg-stone-950/80 border border-stone-800/80 overflow-hidden divide-y divide-stone-800/60">
+              {/* Early Prayer Alert (7 Menit Sebelum Waktu Sholat) */}
+              <label className="p-2.5 flex items-center justify-between cursor-pointer bg-emerald-950/20">
+                <div className="flex items-center gap-2">
+                  <Clock className="w-3.5 h-3.5 text-amber-400" />
+                  <div>
+                    <span className="font-semibold text-stone-200 block leading-tight">
+                      Peringatan 7 Menit Sebelum Sholat
+                    </span>
+                    <span className="text-[10px] text-stone-400 leading-none">
+                      Waktu bersiap wudhu &amp; menyegerakan ke masjid
+                    </span>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.earlyPrayerReminder}
+                  onChange={(e) => onUpdateSettings({ earlyPrayerReminder: e.target.checked })}
+                  className="rounded accent-emerald-500 w-4 h-4 cursor-pointer"
+                />
+              </label>
+
+              {/* Early Islamic Event Alert (1 Hari Sebelum Hari Besar) */}
+              <label className="p-2.5 flex items-center justify-between cursor-pointer bg-teal-950/20">
+                <div className="flex items-center gap-2">
+                  <Sparkles className="w-3.5 h-3.5 text-teal-400" />
+                  <div>
+                    <span className="font-semibold text-stone-200 block leading-tight">
+                      Peringatan H-1 Hari Besar Islam
+                    </span>
+                    <span className="text-[10px] text-stone-400 leading-none">
+                      Pengingat 1 hari sebelum puasa sunnah &amp; hari raya
+                    </span>
+                  </div>
+                </div>
+                <input
+                  type="checkbox"
+                  checked={settings.earlyEventReminder}
+                  onChange={(e) => onUpdateSettings({ earlyEventReminder: e.target.checked })}
+                  className="rounded accent-emerald-500 w-4 h-4 cursor-pointer"
+                />
+              </label>
+
               {/* Native Push Notification */}
               <div className="p-2.5 flex items-center justify-between">
                 <div className="flex items-center gap-2">

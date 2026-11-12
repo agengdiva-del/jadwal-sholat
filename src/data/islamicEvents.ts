@@ -143,6 +143,47 @@ export const MAJOR_ISLAMIC_EVENTS: IslamicEvent[] = [
     virtue: '"Barangsiapa berpuasa Ramadhan lalu melanjutkannya dengan enam hari di bulan Syawal, maka pahalanya seperti berpuasa setahun penuh." (HR. Muslim no. 1164)',
   },
   {
+    id: 'fathu-makkah',
+    title: 'Fathu Makkah (20 Ramadhan)',
+    arabicTitle: 'فَتْحُ مَكَّة الْمُكَرَّمَة',
+    hijriDay: 20,
+    hijriMonthIndex: 8,
+    category: 'sejarah_islam',
+    description: 'Pembebasan kota Makkah Al-Mukarramah tanpa pertumpahan darah dan pembersihan Ka’bah dari berhala.',
+    virtue: 'Kemenangan dakwah tauhid yang membuktikan keagungan sifat pemaaf Rasulullah SAW.',
+  },
+  {
+    id: 'perang-badar',
+    title: 'Yaumul Furqan - Perang Badar (17 Ramadhan)',
+    arabicTitle: 'غَزْوَةُ بَدْرٍ الْكُبْرَى',
+    hijriDay: 17,
+    hijriMonthIndex: 8,
+    category: 'sejarah_islam',
+    description: 'Perang Badar Kubra di mana 313 prajurit muslimin dibantu ribuan malaikat mengalahkan 1.000 kaum kafir Quraisy.',
+    virtue: 'Hari pembeda (Al-Furqan) antara yang haq dan yang bathil yang mengokohkan sendi peradaban Islam.',
+  },
+  {
+    id: 'sepuluh-awal-dzulhijjah',
+    title: '10 Hari Pertama Dzulhijjah (1-10 Dzulhijjah)',
+    arabicTitle: 'عَشْرُ ذِي الْحِجَّةِ الْمُبَارَكَة',
+    hijriDay: 1,
+    hijriMonthIndex: 11,
+    category: 'sejarah_islam',
+    description: 'Hari-hari yang paling dicintai Allah untuk beramal shalih di sepanjang tahun.',
+    virtue: '"Tidak ada hari di mana amal shalih lebih dicintai oleh Allah daripada hari-hari ini (10 awal Dzulhijjah)." (HR. Bukhari)',
+    practiceGuide: 'Perbanyak puasa sunnah, tahlil, takbir, tahmid, dan sedekah.',
+  },
+  {
+    id: 'hari-tarwiyah',
+    title: 'Hari Tarwiyah (8 Dzulhijjah)',
+    arabicTitle: 'يَوْمُ التَّرْوِيَة',
+    hijriDay: 8,
+    hijriMonthIndex: 11,
+    category: 'puasa_sunnah',
+    description: 'Hari persiapan wukuf dan awal mula jamaah haji menuju Mina untuk membekali air.',
+    virtue: 'Disunnahkan berpuasa sunnah bagi muslim yang tidak sedang menunaikan ibadah haji.',
+  },
+  {
     id: 'puasa-arafah',
     title: 'Hari Arafah & Puasa Arafah (9 Dzulhijjah)',
     arabicTitle: 'يَوْمُ عَرَفَة وَصَوْمُ عَرَفَة',
@@ -171,6 +212,16 @@ export const MAJOR_ISLAMIC_EVENTS: IslamicEvent[] = [
     category: 'sejarah_islam',
     description: 'Hari-hari makan, minum, dan mengingat Allah SWT (diharamkan berpuasa).',
     virtue: 'Hari penyembelihan qurban dan memperbanyak takbir muqayyad selepas sholat fardhu.',
+  },
+  {
+    id: 'awal-rajab',
+    title: 'Awal Bulan Rajab (Bulan Haram Suci)',
+    arabicTitle: 'غُرَّةُ شَهْرِ رَجَبِ الأَصَبّ',
+    hijriDay: 1,
+    hijriMonthIndex: 6,
+    category: 'sejarah_islam',
+    description: 'Masuknya salah satu dari 4 Asyhurul Hurum (bulan suci yang dimuliakan).',
+    virtue: 'Bulan menanam benih amal kebajikan untuk dipupuk di Sya’ban dan dipanen di bulan suci Ramadhan.',
   },
 ];
 
@@ -216,6 +267,7 @@ export function getDetailedHijriDate(date: Date): HijriDateDetails {
 export interface UpcomingEventInfo extends IslamicEvent {
   daysLeft: number;
   isToday: boolean;
+  isTomorrow: boolean;
 }
 
 /**
@@ -244,6 +296,7 @@ export function getUpcomingIslamicEvents(currentHijri: HijriDateDetails): Upcomi
       ...event,
       daysLeft: diff,
       isToday: diff === 0,
+      isTomorrow: diff === 1,
     };
   });
 
@@ -251,3 +304,12 @@ export function getUpcomingIslamicEvents(currentHijri: HijriDateDetails): Upcomi
   results.sort((a, b) => a.daysLeft - b.daysLeft);
   return results;
 }
+
+/**
+ * Checks if there is any major Islamic event happening tomorrow (1 day before)
+ */
+export function getTomorrowIslamicEvents(currentHijri: HijriDateDetails): UpcomingEventInfo[] {
+  const events = getUpcomingIslamicEvents(currentHijri);
+  return events.filter((e) => e.isTomorrow);
+}
+

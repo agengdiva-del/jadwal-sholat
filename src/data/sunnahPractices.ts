@@ -195,6 +195,69 @@ export function getContextualSunnahPractices(
       haditsSource: 'HR. Al-Bukhari no. 998',
       isActiveNow: currentMinutes >= ishaMin + 10 || currentMinutes < 60,
     },
+    // 1. Sholat Sunnah Fajar / Qabliyah Subuh
+    {
+      id: 'qabliyah-fajr',
+      title: 'Sholat Sunnah Fajar (Qabliyah Subuh)',
+      subtitle: 'Lebih Baik dari Dunia dan Seisinya',
+      category: 'sholat_sunnah',
+      timeSlotDescription: 'Setelah adzan Subuh sebelum sholat fardhu',
+      rakatCount: '2 rakaat ringan',
+      niatArabic: 'أُصَلِّيْ سُنَّةَ الْفَجْرِ رَكْعَتَيْنِ قَبْلِيَّةً لِلّٰهِ تَعَالَى',
+      niatLatin: 'Ushallii sunnatal-fajri rak’ataini qabliyyatan lillaahi ta’aalaa',
+      niatTranslation: 'Aku niat sholat sunnah fajar dua rakaat sebelum Subuh karena Allah Ta’ala.',
+      virtue: '"Dua rakaat fajar (sebelum Subuh) lebih baik daripada dunia beserta seluruh isinya."',
+      haditsSource: 'HR. Muslim no. 725',
+      isActiveNow: currentMinutes >= fajrMin && currentMinutes < fajrMin + 25,
+    },
+
+    // 2. Sholat Isyraq (Terbit Matahari + 15 Menit)
+    {
+      id: 'isyraq',
+      title: 'Sholat Sunnah Isyraq',
+      subtitle: 'Pahala Sempurna Haji dan Umrah',
+      category: 'sholat_sunnah',
+      timeSlotDescription: '±15-20 menit setelah Syuruq (Matahari Terbit)',
+      rakatCount: '2 rakaat',
+      niatArabic: 'أُصَلِّيْ سُنَّةَ الْإِشْرَاقِ رَكْعَتَيْنِ لِلّٰهِ تَعَالَى',
+      niatLatin: 'Ushallii sunnatal-isyraaqi rak’ataini lillaahi ta’aalaa',
+      niatTranslation: 'Aku niat sholat sunnah Isyraq dua rakaat karena Allah Ta’ala.',
+      virtue: 'Bagi yang sholat Subuh berjamaah lalu berdzikir hingga matahari terbit dan sholat 2 rakaat, mendapat pahala haji dan umrah sempurna.',
+      haditsSource: 'HR. At-Tirmidzi no. 586',
+      isActiveNow: currentMinutes >= sunriseMin + 15 && currentMinutes < sunriseMin + 45,
+    },
+
+    // 3. Sholat Sunnah Wudhu & Tahiyyatul Masjid
+    {
+      id: 'sunnah-wudhu',
+      title: 'Sholat Sunnah Syukrul Wudhu',
+      subtitle: 'Amalan Sahabat Bilal bin Rabah',
+      category: 'sholat_sunnah',
+      timeSlotDescription: 'Setiap selesai berwudhu (Kapan saja)',
+      rakatCount: '2 rakaat',
+      niatArabic: 'أُصَلِّيْ سُنَّةَ الْوُضُوْءِ رَكْعَتَيْنِ لِلّٰهِ تَعَالَى',
+      niatLatin: 'Ushallii sunnatal-wudhuu’i rak’ataini lillaahi ta’aalaa',
+      niatTranslation: 'Aku niat sholat sunnah wudhu dua rakaat karena Allah Ta’ala.',
+      virtue: 'Nabi SAW mendengar suara langkah terompah Bilal di surga berkat menjaga sholat dua rakaat setiap selesai bersuci.',
+      haditsSource: 'HR. Bukhari no. 1147 & Muslim',
+      isActiveNow: false,
+    },
+
+    // 4. Sholat Sunnah Taubat
+    {
+      id: 'sunnah-taubat',
+      title: 'Sholat Sunnah Taubat',
+      subtitle: 'Pembersih Dosa dan Penenang Jiwa',
+      category: 'sholat_sunnah',
+      timeSlotDescription: 'Dianjurkan terutama di malam hari / sepertiga malam',
+      rakatCount: '2 rakaat',
+      niatArabic: 'أُصَلِّيْ سُنَّةَ التَّوْبَةِ رَكْعَتَيْنِ لِلّٰهِ تَعَالَى',
+      niatLatin: 'Ushallii sunnatat-taubati rak’ataini lillaahi ta’aalaa',
+      niatTranslation: 'Aku niat sholat sunnah Taubat dua rakaat karena Allah Ta’ala.',
+      virtue: 'Barangsiapa berwudhu dengan sempurna lalu sholat dua rakaat dan beristighfar memohon ampunan, niscaya Allah mengampuni dosanya.',
+      haditsSource: 'HR. Abu Dawud no. 1521 & At-Tirmidzi',
+      isActiveNow: currentMinutes >= 120 && currentMinutes < fajrMin,
+    },
   ];
 
   // Friday Special Deed: Surah Al-Kahfi & Shalawat

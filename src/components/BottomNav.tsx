@@ -1,7 +1,7 @@
 import React from 'react';
-import { Calendar, Compass, Settings, Moon, Award, CheckCircle2 } from 'lucide-react';
+import { Calendar, BookOpen, Settings, Moon, Award } from 'lucide-react';
 
-export type ActiveTab = 'schedule' | 'calendar' | 'istiqomah' | 'qibla' | 'settings';
+export type ActiveTab = 'schedule' | 'calendar' | 'istiqomah' | 'stories' | 'settings';
 
 interface BottomNavProps {
   activeTab: ActiveTab;
@@ -26,9 +26,9 @@ export const BottomNav: React.FC<BottomNavProps> = ({ activeTab, onChangeTab }) 
       icon: <Award className="w-5 h-5" />,
     },
     {
-      id: 'qibla',
-      label: 'Kiblat',
-      icon: <Compass className="w-5 h-5" />,
+      id: 'stories',
+      label: 'Kisah',
+      icon: <BookOpen className="w-5 h-5" />,
     },
     {
       id: 'settings',

@@ -19,6 +19,9 @@ export interface AppSettings {
   selectedCity: CityInfo;
   customCoords: { lat: number; lng: number; label: string } | null;
   prayerAlerts: Record<PrayerName, PrayerAlertConfig>;
+  earlyPrayerReminder: boolean; // Peringatan 7 menit sebelum masuk waktu sholat
+  earlyPrayerReminderMinutes: number; // default 7
+  earlyEventReminder: boolean; // Peringatan 1 hari sebelum hari besar Islam
   fajrTatswib: boolean; // "Ash-shalatu khairum minan naum" for Subuh
   vibrationEnabled: boolean;
   showImsak: boolean;
@@ -44,6 +47,9 @@ const DEFAULT_SETTINGS: AppSettings = {
     maghrib: { enabled: true, soundType: 'adzan_default' },
     isha: { enabled: true, soundType: 'adzan_default' },
   },
+  earlyPrayerReminder: true,
+  earlyPrayerReminderMinutes: 7,
+  earlyEventReminder: true,
   fajrTatswib: true,
   vibrationEnabled: true,
   showImsak: true,

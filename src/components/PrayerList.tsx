@@ -74,7 +74,7 @@ export const PrayerList: React.FC<PrayerListProps> = ({
           <span>Jadwal Waktu Sholat Lengkap</span>
         </h2>
         <button
-          onClick={() => onPreviewSound('adzan_default')}
+          onClick={() => onPreviewSound(settings.prayerAlerts.maghrib?.soundType || 'adzan_default')}
           className="inline-flex items-center gap-1 px-2 py-0.5 rounded-lg bg-emerald-950/80 border border-emerald-800/60 hover:border-emerald-500 text-emerald-300 text-[10px] font-semibold active:scale-95 transition"
         >
           <Play className="w-2.5 h-2.5 fill-current" />
@@ -89,6 +89,7 @@ export const PrayerList: React.FC<PrayerListProps> = ({
           const alertConfig = settings.prayerAlerts[name] || { enabled: true, soundType: 'adzan_default' };
           const isAdzanSound =
             alertConfig.soundType === 'adzan_default' ||
+            alertConfig.soundType === 'adzan_custom' ||
             alertConfig.soundType === 'adzan_melodic' ||
             alertConfig.soundType === 'adzan_short' ||
             alertConfig.soundType === 'bedug_takbir';

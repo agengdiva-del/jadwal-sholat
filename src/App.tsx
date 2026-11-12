@@ -6,7 +6,7 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react';
 import { CompactMainCard } from './components/CompactMainCard';
 import { PrayerList } from './components/PrayerList';
-import { QiblaCompass } from './components/QiblaCompass';
+import { IslamicStoriesView } from './components/IslamicStoriesView';
 import { DzikirDoaSection } from './components/DzikirDoaSection';
 import { ContextualSunnahCard } from './components/ContextualSunnahCard';
 import { HijriCalendarView } from './components/HijriCalendarView';
@@ -29,8 +29,12 @@ import {
 } from './utils/prayerEngine';
 import { CityInfo, DEFAULT_CITY, POPULAR_CITIES } from './data/cities';
 import { audioEngine, AdzanSoundType } from './utils/audioEngine';
-import { sendPrayerNotification } from './utils/notificationService';
-import { getDetailedHijriDate } from './data/islamicEvents';
+import {
+  sendPrayerNotification,
+  sendEarlyPrayerNotification,
+  sendEarlyEventNotification,
+} from './utils/notificationService';
+import { getDetailedHijriDate, getTomorrowIslamicEvents } from './data/islamicEvents';
 import { getContextualSunnahPractices } from './data/sunnahPractices';
 import { Volume2, VolumeX, Zap, Sparkles, BookOpen, Clock } from 'lucide-react';
 
@@ -137,6 +141,9 @@ export default function App() {
       const timeStr = `${pad(now.getHours())}:${pad(now.getMinutes())}`;
       const todayDateStr = `${now.getFullYear()}-${now.getMonth()}-${now.getDate()}`;
 
+      const currentTotalMin = now.getHours() * 60 + now.getMinutes();
+
+      // Check 1: Exact Adzan Time Trigger
       ADZAN_PRAYERS.forEach((prayerName) => {
         const prayerTime = prayers[prayerName];
         if (prayerTime && prayerTime === timeStr) {
@@ -156,7 +163,40 @@ export default function App() {
             }
           }
         }
+
+        // Check 2: 7-Minute Early Prayer Reminder (Peringatan 7 menit sebelum masuk waktu sholat)
+        if (settings.earlyPrayerReminder && prayerTime) {
+          const [ph, pm] = prayerTime.split(':').map(Number);
+          const prayerTotalMin = ph * 60 + pm;
+          const diffMinutes = prayerTotalMin - currentTotalMin;
+
+          if (diffMinutes === (settings.earlyPrayerReminderMinutes || 7)) {
+            const earlyKey = `early7m_${todayDateStr}_${prayerName}`;
+            if (!triggeredPrayersRef.current.has(earlyKey)) {
+              triggeredPrayersRef.current.add(earlyKey);
+              sendEarlyPrayerNotification(prayerName.toUpperCase(), prayerTime, settings.earlyPrayerReminderMinutes || 7);
+              if (!settings.muteAll) {
+                audioEngine.playSound('soft_chime');
+              }
+            }
+          }
+        }
       });
+
+      // Check 3: 1-Day Early Reminder for Major Islamic Events (Peringatan H-1 Hari Besar)
+      if (settings.earlyEventReminder) {
+        const eventKey = `early_event_${todayDateStr}`;
+        if (!triggeredPrayersRef.current.has(eventKey)) {
+          const hijri = getDetailedHijriDate(now);
+          const tomorrowEvents = getTomorrowIslamicEvents(hijri);
+          if (tomorrowEvents.length > 0) {
+            triggeredPrayersRef.current.add(eventKey);
+            tomorrowEvents.forEach((ev) => {
+              sendEarlyEventNotification(ev.title, ev.virtue || ev.description);
+            });
+          }
+        }
+      }
     };
 
     const intervalMs = settings.batterySaver && document.hidden ? 10000 : 1000;
@@ -426,11 +466,11 @@ export default function App() {
         )}
 
         {/* ======================================================== */}
-        {/* TAB 4: KOMPAS KIBLAT                                     */}
+        {/* TAB 4: 1001 KISAH ISLAMI, PARA NABI & SAHABAT            */}
         {/* ======================================================== */}
-        {activeTab === 'qibla' && (
+        {activeTab === 'stories' && (
           <div className="animate-in fade-in duration-150">
-            <QiblaCompass city={city} batterySaver={settings.batterySaver} />
+            <IslamicStoriesView currentDate={currentTime} />
           </div>
         )}
 
